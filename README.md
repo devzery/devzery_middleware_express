@@ -41,19 +41,7 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
    Make sure to apply the middleware before defining your routes.
 
-4. Run your Express application:
-
-   ```typescript
-   import { RegisterRoutes } from './routes';
-
-   // ... Express application setup ...
-
-   RegisterRoutes(app);
-
-   app.listen(3000, () => {
-     console.log('Server is running on port 3000');
-   });
-   ```
+4. Run your Express application
 
    The Devzery Middleware SDK will now capture the request and response data for each incoming request and send it to the specified Devzery API endpoint.
 
