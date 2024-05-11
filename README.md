@@ -7,7 +7,7 @@ The Devzery Middleware SDK is a package that allows you to easily integrate requ
 You can install the Devzery Middleware SDK using npm:
 
 ```bash
-npm install git-repo
+npm install https://github.com/devzery/devzery_middleware_express
 ```
 
 ## Usage
@@ -24,11 +24,12 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
    ```typescript
    const devzeryConfig = {
-     apiEndpoint: 'ENDPOINT' //OPTIONAL FOR DEVELOPMENT/TEST ONLY,
+     apiEndpoint: 'ENDPOINT', //OPTIONAL FOR DEVELOPMENT/TEST ONLY
      apiKey: 'YOUR_API_KEY',
      sourceName: 'YOUR_SOURCE_NAME',
    };
    ```
+
 
    Replace `'YOUR_API_KEY'` with your actual Devzery API key and `'YOUR_SOURCE_NAME'` with a name to identify your application as the source of the logged data.
 
@@ -56,11 +57,36 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
    The Devzery Middleware SDK will now capture the request and response data for each incoming request and send it to the specified Devzery API endpoint.
 
+   ### OR
+
+
+   ```javascript
+    const express = require('express');
+    const devzeryMiddleware = require('devzery_middleware_express').default;
+
+    const app = express();
+
+    const devzeryConfig = {
+    apiEndpoint: 'ENDPOINT URL', //OPTIONAL FOR DEVELOPMENT/TEST ONLY
+    apiKey: 'YOUR_API_KEY',
+    sourceName: 'YOUR_SOURCE_NAME',
+    };
+
+    app.use(devzeryMiddleware(devzeryConfig));
+
+    app.get('/', (req, res) => {
+    res.send('Hello, world!');
+    });
+
+    app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+    });
+   ```
+
 ## Configuration
 
 The `devzeryMiddleware` function accepts an optional configuration object with the following properties:
 
-- `apiEndpoint` (optional): The URL of the Devzery API endpoint. Defaults to `'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add'`.
 - `apiKey` : Your Devzery API key for authentication.
 - `sourceName` : A name to identify your application as the source of the logged data.
 
