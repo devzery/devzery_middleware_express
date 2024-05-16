@@ -26,7 +26,11 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     await next();
 
     const elapsedTime = Date.now() - startTime;
-    const headers = { ...req.headers };
+    const headers = Object.fromEntries(
+      Object.entries(req.headers).filter(([key]) => 
+        key.startsWith('http_') || ['content-length', 'content-type'].includes(key)
+      )
+    );
 
     let body: any;
     if (req.is('application/json')) {
@@ -35,6 +39,12 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
       body = parse(req.body.toString());
     } else {
       body = null;
+    }
+
+    try {
+      const responseContentString = responseContent.toString();
+      responseContent = JSON.parse(responseContentString);
+    } catch {
       responseContent = null;
     }
 
@@ -52,7 +62,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
       elapsedTime,
     };
 
-    console.log(data);
+    console.log("Devzery:", data);
 
     (async () => {
       try {
@@ -61,6 +71,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
             'x-access-token': apiKey,
             'source-name': sourceName,
           };
+          console.log("Devzery Sending:", data)
           await axios.post(apiEndpoint, data, { headers });
         } else if (!apiKey || !sourceName) {
           console.log('Devzery: No API Key or Source given!');

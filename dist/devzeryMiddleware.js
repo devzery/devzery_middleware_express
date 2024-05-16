@@ -28,7 +28,7 @@ function devzeryMiddleware(config) {
         // Call the next middleware/route handler
         yield next();
         const elapsedTime = Date.now() - startTime;
-        const headers = Object.assign({}, req.headers);
+        const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
         let body;
         if (req.is('application/json')) {
             body = req.body;
@@ -38,6 +38,12 @@ function devzeryMiddleware(config) {
         }
         else {
             body = null;
+        }
+        try {
+            const responseContentString = responseContent.toString();
+            responseContent = JSON.parse(responseContentString);
+        }
+        catch (_a) {
             responseContent = null;
         }
         const data = {
@@ -53,28 +59,28 @@ function devzeryMiddleware(config) {
             },
             elapsedTime,
         };
-        console.log(data);
-        try {
-            if (apiKey && sourceName && responseContent !== null) {
-                const headers = {
-                    'x-access-token': apiKey,
-                    'source-name': sourceName,
-                };
-                const response = yield axios_1.default.post(apiEndpoint, data, { headers });
-                if (response.status !== 200) {
-                    console.log(`Failed to send data to API endpoint. Status code: ${response.status}`);
+        console.log("Devzery:", data);
+        (() => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (apiKey && sourceName && responseContent !== null) {
+                    const headers = {
+                        'x-access-token': apiKey,
+                        'source-name': sourceName,
+                    };
+                    console.log("Devzery Sending:", data);
+                    yield axios_1.default.post(apiEndpoint, data, { headers });
+                }
+                else if (!apiKey || !sourceName) {
+                    console.log('Devzery: No API Key or Source given!');
+                }
+                else {
+                    console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
                 }
             }
-            else if (!apiKey || !sourceName) {
-                console.log('Devzery: No API Key or Source given!');
+            catch (error) {
+                console.error(`Error occurred while sending data to API endpoint: ${error}`);
             }
-            else {
-                console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
-            }
-        }
-        catch (error) {
-            console.error(`Error occurred while sending data to API endpoint: ${error}`);
-        }
+        }))();
     });
 }
 exports.default = devzeryMiddleware;
