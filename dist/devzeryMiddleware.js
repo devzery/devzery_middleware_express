@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const querystring_1 = require("querystring");
+const multer_1 = __importDefault(require("multer"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const upload = (0, multer_1.default)();
 function devzeryMiddleware(config) {
     const { apiEndpoint = 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add', apiKey, sourceName } = config;
     return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
@@ -25,62 +27,88 @@ function devzeryMiddleware(config) {
             responseContent = content;
             return originalSend.call(this, content);
         };
-        // Call the next middleware/route handler
-        yield next();
-        const elapsedTime = Date.now() - startTime;
-        const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
-        let body;
-        if (req.is('application/json')) {
-            body = req.body;
-        }
-        else if (req.is('multipart/form-data') || req.is('application/x-www-form-urlencoded')) {
-            body = (0, querystring_1.parse)(req.body.toString());
-        }
-        else {
-            body = null;
-        }
-        try {
-            const responseContentString = responseContent.toString();
-            responseContent = JSON.parse(responseContentString);
-        }
-        catch (_a) {
-            responseContent = null;
-        }
-        const data = {
-            request: {
-                method: req.method,
-                path: req.originalUrl,
-                headers,
-                body,
-            },
-            response: {
-                statusCode: res.statusCode,
-                content: responseContent,
-            },
-            elapsedTime,
-        };
-        console.log("Devzery:", data);
-        (() => __awaiter(this, void 0, void 0, function* () {
-            try {
-                if (apiKey && sourceName && responseContent !== null) {
-                    const headers = {
-                        'x-access-token': apiKey,
-                        'source-name': sourceName,
-                    };
-                    console.log("Devzery Sending:", data);
-                    yield axios_1.default.post(apiEndpoint, data, { headers });
+        // Parse JSON request body
+        body_parser_1.default.json()(req, res, (err) => {
+            if (err) {
+                console.error('Error occurred while parsing JSON:', err);
+                return res.status(400).json({ error: 'Bad Request' });
+            }
+            // Parse form data using multer middleware
+            upload.any()(req, res, (err) => __awaiter(this, void 0, void 0, function* () {
+                if (err) {
+                    console.error('Error occurred while parsing form data:', err);
+                    return res.status(400).json({ error: 'Bad Request' });
                 }
-                else if (!apiKey || !sourceName) {
-                    console.log('Devzery: No API Key or Source given!');
+                // Call the next middleware/route handler
+                try {
+                    yield next();
+                }
+                catch (error) {
+                    console.error('Error occurred during request processing:', error);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                const elapsedTime = Date.now() - startTime;
+                const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
+                let body;
+                if (req.is('application/json')) {
+                    body = req.body;
+                }
+                else if (req.is('multipart/form-data') || req.is('application/x-www-form-urlencoded')) {
+                    body = req.body;
                 }
                 else {
-                    console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
+                    body = null;
                 }
-            }
-            catch (error) {
-                console.error(`Error occurred while sending data to API endpoint: ${error}`);
-            }
-        }))();
+                let responseContentString;
+                if (typeof responseContent === 'string') {
+                    responseContentString = responseContent;
+                }
+                else if (Buffer.isBuffer(responseContent)) {
+                    responseContentString = responseContent.toString('utf-8');
+                }
+                else if (typeof responseContent === 'object') {
+                    responseContentString = JSON.stringify(responseContent);
+                }
+                else {
+                    responseContentString = responseContent.toString();
+                }
+                const data = {
+                    request: {
+                        method: req.method,
+                        path: req.originalUrl,
+                        headers,
+                        body,
+                    },
+                    response: {
+                        statusCode: res.statusCode,
+                        content: responseContentString,
+                    },
+                    elapsedTime,
+                };
+                console.log("Devzery:", data);
+                (() => __awaiter(this, void 0, void 0, function* () {
+                    try {
+                        if (apiKey && sourceName && responseContentString !== null) {
+                            const headers = {
+                                'x-access-token': apiKey,
+                                'source-name': sourceName,
+                            };
+                            console.log("Devzery Sending:", data);
+                            yield axios_1.default.post(apiEndpoint, data, { headers });
+                        }
+                        else if (!apiKey || !sourceName) {
+                            console.log('Devzery: No API Key or Source given!');
+                        }
+                        else {
+                            console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
+                        }
+                    }
+                    catch (error) {
+                        console.error(`Error occurred while sending data to API endpoint: ${error}`);
+                    }
+                }))();
+            }));
+        });
     });
 }
 exports.default = devzeryMiddleware;
