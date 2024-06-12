@@ -21,10 +21,23 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     // Wrap the original send method to capture the response content
     const originalSend = res.send;
     let responseContent: any;
+    
+
     res.send = function (content) {
       responseContent = content;
-      return originalSend.call(this, content);
+      const result = originalSend.call(this, content);
+      onResponseSent();
+      return result;
     };
+
+    function onResponseSent() {
+      const elapsedTime = Date.now() - startTime;
+      const headers = Object.fromEntries(
+        Object.entries(req.headers).filter(([key]) =>
+          key.startsWith('http_') || ['content-length', 'content-type'].includes(key)
+        )
+      );
+
 
     // Parse JSON request body
     bodyParser.json()(req, res, (err) => {
