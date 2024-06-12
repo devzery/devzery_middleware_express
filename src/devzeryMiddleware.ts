@@ -37,6 +37,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
           key.startsWith('http_') || ['content-length', 'content-type'].includes(key)
         )
       );
+    }
 
 
     // Parse JSON request body
