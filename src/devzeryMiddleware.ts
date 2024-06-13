@@ -114,7 +114,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         }
 
         const elapsedTime = Date.now() - startTime;
-        const headers = Object.fromEntries(
+        headers = Object.fromEntries(
           Object.entries(req.headers).filter(([key]) =>
             key.startsWith('http_') || ['content-length', 'content-type'].includes(key)
           )

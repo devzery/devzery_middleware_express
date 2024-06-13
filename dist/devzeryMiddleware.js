@@ -26,7 +26,6 @@ function devzeryMiddleware(config) {
         let responseContent;
         let headers;
         let body;
-        let elapsedTime;
         res.send = function (content) {
             console.log("Content res.send ", content);
             responseContent = content;
@@ -60,7 +59,7 @@ function devzeryMiddleware(config) {
                     statusCode: res.statusCode,
                     content: responseContentString,
                 },
-                elapsedTime,
+                elapsedTime: Date.now() - startTime,
             };
             console.log("Devzery:", data);
             (() => __awaiter(this, void 0, void 0, function* () {
@@ -106,7 +105,7 @@ function devzeryMiddleware(config) {
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
                 const elapsedTime = Date.now() - startTime;
-                const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
+                headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
                 if (req.is('application/json')) {
                     body = req.body;
                 }
