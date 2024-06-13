@@ -24,9 +24,16 @@ function devzeryMiddleware(config) {
         const originalSend = res.send;
         let responseContent;
         res.send = function (content) {
+            console.log("Content res.send ", content);
             responseContent = content;
-            return originalSend.call(this, content);
+            const result = originalSend.call(this, content);
+            onResponseSent();
+            return result;
         };
+        function onResponseSent() {
+            const elapsedTime = Date.now() - startTime;
+            const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
+        }
         // Parse JSON request body
         body_parser_1.default.json()(req, res, (err) => {
             if (err) {
@@ -60,6 +67,7 @@ function devzeryMiddleware(config) {
                     body = null;
                 }
                 let responseContentString;
+                console.log(typeof responseContent);
                 if (typeof responseContent === 'string') {
                     responseContentString = responseContent;
                 }

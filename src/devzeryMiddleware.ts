@@ -24,6 +24,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     
 
     res.send = function (content) {
+      console.log("Content res.send ", content)
       responseContent = content;
       const result = originalSend.call(this, content);
       onResponseSent();
@@ -79,6 +80,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         }
 
         let responseContentString: string;
+        console.log(typeof responseContent)
         if (typeof responseContent === 'string') {
           responseContentString = responseContent;
         } else if (Buffer.isBuffer(responseContent)) {
