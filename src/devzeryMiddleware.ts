@@ -24,7 +24,6 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     let responseContent: any;
     let headers: any;
     let body: any;
-    let elapsedTime: any;
     
 
     res.send = function (content) {
@@ -66,7 +65,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
           statusCode: res.statusCode,
           content: responseContentString,
         },
-        elapsedTime,
+        elapsedTime:Date.now() - startTime,
       };
 
       console.log("Devzery:", data);
