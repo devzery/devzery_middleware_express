@@ -27,27 +27,18 @@ function devzeryMiddleware(config) {
         let headers;
         let body;
         res.send = function (content) {
-            console.log("Content res.send ", content);
             responseContent = content;
             const result = originalSend.call(this, content);
             onResponseSent();
             processResponseContent();
             return result;
         };
-        res.locals.getResponseContent = () => responseContent;
-        responseContent = res.locals.getResponseContent();
-        console.log("Before sending ", responseContent);
         function onResponseSent() {
             const elapsedTime = Date.now() - startTime;
             const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
         }
         function processResponseContent() {
             const responseContentString = responseContent !== undefined ? responseContent.toString() : '';
-            const responseData = {
-                statusCode: res.statusCode,
-                content: responseContentString,
-            };
-            console.log("Response Data:", responseData);
             const data = {
                 request: {
                     method: req.method,
@@ -61,7 +52,7 @@ function devzeryMiddleware(config) {
                 },
                 elapsedTime: Date.now() - startTime,
             };
-            console.log("Devzery:", data);
+            // console.log("Devzery:", data);
             (() => __awaiter(this, void 0, void 0, function* () {
                 try {
                     if (apiKey && sourceName && responseContentString !== null) {
@@ -69,7 +60,7 @@ function devzeryMiddleware(config) {
                             'x-access-token': apiKey,
                             'source-name': sourceName,
                         };
-                        console.log("Devzery Sending:", data);
+                        // console.log("Devzery Sending:", data);
                         yield axios_1.default.post(apiEndpoint, data, { headers });
                     }
                     else if (!apiKey || !sourceName) {

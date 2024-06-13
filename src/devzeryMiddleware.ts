@@ -27,17 +27,12 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     
 
     res.send = function (content) {
-      console.log("Content res.send ", content)
       responseContent = content;
       const result = originalSend.call(this, content);
       onResponseSent();
       processResponseContent();
       return result;
     };
-    res.locals.getResponseContent = () => responseContent;
- 
-    responseContent = res.locals.getResponseContent();
-    console.log("Before sending ",responseContent)
     function onResponseSent() {
       const elapsedTime = Date.now() - startTime;
       const headers = Object.fromEntries(
@@ -48,12 +43,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     }
     function processResponseContent() {
       const responseContentString = responseContent !== undefined ? responseContent.toString() : '';
-  
-      const responseData = {
-        statusCode: res.statusCode,
-        content: responseContentString,
-      };
-      console.log("Response Data:", responseData);
+
       const data = {
         request: {
           method: req.method,
@@ -68,7 +58,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         elapsedTime:Date.now() - startTime,
       };
 
-      console.log("Devzery:", data);
+      // console.log("Devzery:", data);
 
       (async () => {
         try {
@@ -77,7 +67,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
               'x-access-token': apiKey,
               'source-name': sourceName,
             };
-            console.log("Devzery Sending:", data);
+            // console.log("Devzery Sending:", data);
             await axios.post(apiEndpoint, data, { headers });
           } else if (!apiKey || !sourceName) {
             console.log('Devzery: No API Key or Source given!');
