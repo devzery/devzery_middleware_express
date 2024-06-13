@@ -29,6 +29,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
       responseContent = content;
       const result = originalSend.call(this, content);
       onResponseSent();
+      getReqRes(req,res,next,content);
       return result;
     };
     res.locals.getResponseContent = () => responseContent;
@@ -46,6 +47,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
 
 
     // Parse JSON request body
+   function getReqRes(req:Request,res:Response,next:NextFunction,content?:any){
     bodyParser.json()(req, res, (err) => {
       if (err) {
         console.error('Error occurred while parsing JSON:', err);
@@ -83,18 +85,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
           body = null;
         }
 
-        let responseContentString: string;
-        console.log("Response obj ",res)
-        if (typeof res === 'string') {
-          responseContentString = responseContent;
-        } else if (Buffer.isBuffer(res)) {
-          responseContentString = responseContent.toString('utf-8');
-        } else if (typeof res === 'object') {
-          responseContentString = JSON.stringify(res);
-        } else {
-          console.log("Response Content ", responseContent)
-          responseContentString = JSON.stringify(res);
-        }
+        let responseContentString: string=content;
 
         const data = {
           request: {
@@ -132,5 +123,6 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         })();
       });
     });
+   }
   };
 }

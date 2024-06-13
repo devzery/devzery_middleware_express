@@ -29,6 +29,7 @@ function devzeryMiddleware(config) {
             responseContent = content;
             const result = originalSend.call(this, content);
             onResponseSent();
+            getReqRes(req, res, next, content);
             return result;
         };
         res.locals.getResponseContent = () => responseContent;
@@ -39,89 +40,77 @@ function devzeryMiddleware(config) {
             const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
         }
         // Parse JSON request body
-        body_parser_1.default.json()(req, res, (err) => {
-            if (err) {
-                console.error('Error occurred while parsing JSON:', err);
-                return res.status(400).json({ error: 'Bad Request' });
-            }
-            // Parse form data using multer middleware
-            upload.any()(req, res, (err) => __awaiter(this, void 0, void 0, function* () {
+        function getReqRes(req, res, next, content) {
+            body_parser_1.default.json()(req, res, (err) => {
                 if (err) {
-                    console.error('Error occurred while parsing form data:', err);
+                    console.error('Error occurred while parsing JSON:', err);
                     return res.status(400).json({ error: 'Bad Request' });
                 }
-                // Call the next middleware/route handler
-                try {
-                    yield next();
-                }
-                catch (error) {
-                    console.error('Error occurred during request processing:', error);
-                    return res.status(500).json({ error: 'Internal Server Error' });
-                }
-                const elapsedTime = Date.now() - startTime;
-                const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
-                let body;
-                if (req.is('application/json')) {
-                    body = req.body;
-                }
-                else if (req.is('multipart/form-data') || req.is('application/x-www-form-urlencoded')) {
-                    body = req.body;
-                }
-                else {
-                    body = null;
-                }
-                let responseContentString;
-                console.log("Response obj ", res);
-                if (typeof res === 'string') {
-                    responseContentString = responseContent;
-                }
-                else if (Buffer.isBuffer(res)) {
-                    responseContentString = responseContent.toString('utf-8');
-                }
-                else if (typeof res === 'object') {
-                    responseContentString = JSON.stringify(res);
-                }
-                else {
-                    console.log("Response Content ", responseContent);
-                    responseContentString = JSON.stringify(res);
-                }
-                const data = {
-                    request: {
-                        method: req.method,
-                        path: req.originalUrl,
-                        headers,
-                        body,
-                    },
-                    response: {
-                        statusCode: res.statusCode,
-                        content: responseContentString,
-                    },
-                    elapsedTime,
-                };
-                console.log("Devzery:", data);
-                (() => __awaiter(this, void 0, void 0, function* () {
+                // Parse form data using multer middleware
+                upload.any()(req, res, (err) => __awaiter(this, void 0, void 0, function* () {
+                    if (err) {
+                        console.error('Error occurred while parsing form data:', err);
+                        return res.status(400).json({ error: 'Bad Request' });
+                    }
+                    // Call the next middleware/route handler
                     try {
-                        if (apiKey && sourceName && responseContentString !== null) {
-                            const headers = {
-                                'x-access-token': apiKey,
-                                'source-name': sourceName,
-                            };
-                            console.log("Devzery Sending:", data);
-                            yield axios_1.default.post(apiEndpoint, data, { headers });
-                        }
-                        else if (!apiKey || !sourceName) {
-                            console.log('Devzery: No API Key or Source given!');
-                        }
-                        else {
-                            console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
-                        }
+                        yield next();
                     }
                     catch (error) {
-                        console.error(`Error occurred while sending data to API endpoint: ${error}`);
+                        console.error('Error occurred during request processing:', error);
+                        return res.status(500).json({ error: 'Internal Server Error' });
                     }
-                }))();
-            }));
-        });
+                    const elapsedTime = Date.now() - startTime;
+                    const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
+                    let body;
+                    if (req.is('application/json')) {
+                        body = req.body;
+                    }
+                    else if (req.is('multipart/form-data') || req.is('application/x-www-form-urlencoded')) {
+                        body = req.body;
+                    }
+                    else {
+                        body = null;
+                    }
+                    let responseContentString = content;
+                    const data = {
+                        request: {
+                            method: req.method,
+                            path: req.originalUrl,
+                            headers,
+                            body,
+                        },
+                        response: {
+                            statusCode: res.statusCode,
+                            content: responseContentString,
+                        },
+                        elapsedTime,
+                    };
+                    console.log("Devzery:", data);
+                    (() => __awaiter(this, void 0, void 0, function* () {
+                        try {
+                            if (apiKey && sourceName && responseContentString !== null) {
+                                const headers = {
+                                    'x-access-token': apiKey,
+                                    'source-name': sourceName,
+                                };
+                                console.log("Devzery Sending:", data);
+                                yield axios_1.default.post(apiEndpoint, data, { headers });
+                            }
+                            else if (!apiKey || !sourceName) {
+                                console.log('Devzery: No API Key or Source given!');
+                            }
+                            else {
+                                console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
+                            }
+                        }
+                        catch (error) {
+                            console.error(`Error occurred while sending data to API endpoint: ${error}`);
+                        }
+                    }))();
+                }));
+            });
+        }
     });
 }
 exports.default = devzeryMiddleware;
