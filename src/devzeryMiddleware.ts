@@ -89,7 +89,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         } else if (typeof responseContent === 'object') {
           responseContentString = JSON.stringify(responseContent);
         } else {
-          responseContentString = responseContent.toString();
+          responseContentString = responseContent?.toString();
         }
 
         const data = {

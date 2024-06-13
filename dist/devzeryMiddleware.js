@@ -79,7 +79,7 @@ function devzeryMiddleware(config) {
                     responseContentString = JSON.stringify(responseContent);
                 }
                 else {
-                    responseContentString = responseContent.toString();
+                    responseContentString = responseContent === null || responseContent === void 0 ? void 0 : responseContent.toString();
                 }
                 const data = {
                     request: {
