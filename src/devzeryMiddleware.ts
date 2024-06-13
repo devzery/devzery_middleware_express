@@ -31,7 +31,10 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
       onResponseSent();
       return result;
     };
-
+    res.locals.getResponseContent = () => responseContent;
+ 
+    responseContent = res.locals.getResponseContent();
+    console.log("Before sending ",responseContent)
     function onResponseSent() {
       const elapsedTime = Date.now() - startTime;
       const headers = Object.fromEntries(

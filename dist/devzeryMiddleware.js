@@ -31,6 +31,9 @@ function devzeryMiddleware(config) {
             onResponseSent();
             return result;
         };
+        res.locals.getResponseContent = () => responseContent;
+        responseContent = res.locals.getResponseContent();
+        console.log("Before sending ", responseContent);
         function onResponseSent() {
             const elapsedTime = Date.now() - startTime;
             const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
