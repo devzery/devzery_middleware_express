@@ -20,6 +20,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
 
     // Wrap the original send method to capture the response content
     const originalSend = res.send;
+    console.log("Original Send ", originalSend)
     let responseContent: any;
     
 

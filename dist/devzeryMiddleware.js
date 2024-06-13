@@ -22,6 +22,7 @@ function devzeryMiddleware(config) {
         const startTime = Date.now();
         // Wrap the original send method to capture the response content
         const originalSend = res.send;
+        console.log("Original Send ", originalSend);
         let responseContent;
         res.send = function (content) {
             console.log("Content res.send ", content);
