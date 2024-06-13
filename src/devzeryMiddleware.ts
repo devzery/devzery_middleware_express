@@ -22,6 +22,9 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     const originalSend = res.send;
     console.log("Original Send ", originalSend)
     let responseContent: any;
+    let headers: any;
+    let body: any;
+    let elapsedTime: any;
     
 
     res.send = function (content) {
@@ -29,7 +32,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
       responseContent = content;
       const result = originalSend.call(this, content);
       onResponseSent();
-      getReqRes(req,res,next,content);
+      processResponseContent();
       return result;
     };
     res.locals.getResponseContent = () => responseContent;
@@ -44,10 +47,52 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         )
       );
     }
+    function processResponseContent() {
+      const responseContentString = responseContent !== undefined ? responseContent.toString() : '';
+  
+      const responseData = {
+        statusCode: res.statusCode,
+        content: responseContentString,
+      };
+      console.log("Response Data:", responseData);
+      const data = {
+        request: {
+          method: req.method,
+          path: req.originalUrl,
+          headers,
+          body,
+        },
+        response: {
+          statusCode: res.statusCode,
+          content: responseContentString,
+        },
+        elapsedTime,
+      };
+
+      console.log("Devzery:", data);
+
+      (async () => {
+        try {
+          if (apiKey && sourceName && responseContentString !== null) {
+            const headers = {
+              'x-access-token': apiKey,
+              'source-name': sourceName,
+            };
+            console.log("Devzery Sending:", data);
+            await axios.post(apiEndpoint, data, { headers });
+          } else if (!apiKey || !sourceName) {
+            console.log('Devzery: No API Key or Source given!');
+          } else {
+            console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
+          }
+        } catch (error) {
+          console.error(`Error occurred while sending data to API endpoint: ${error}`);
+        }
+      })();
+    }
 
 
     // Parse JSON request body
-   function getReqRes(req:Request,res:Response,next:NextFunction,content?:any){
     bodyParser.json()(req, res, (err) => {
       if (err) {
         console.error('Error occurred while parsing JSON:', err);
@@ -76,7 +121,6 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
           )
         );
 
-        let body: any;
         if (req.is('application/json')) {
           body = req.body;
         } else if (req.is('multipart/form-data') || req.is('application/x-www-form-urlencoded')) {
@@ -84,45 +128,8 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         } else {
           body = null;
         }
-
-        let responseContentString: string=content;
-
-        const data = {
-          request: {
-            method: req.method,
-            path: req.originalUrl,
-            headers,
-            body,
-          },
-          response: {
-            statusCode: res.statusCode,
-            content: responseContentString,
-          },
-          elapsedTime,
-        };
-
-        console.log("Devzery:", data);
-
-        (async () => {
-          try {
-            if (apiKey && sourceName && responseContentString !== null) {
-              const headers = {
-                'x-access-token': apiKey,
-                'source-name': sourceName,
-              };
-              console.log("Devzery Sending:", data);
-              await axios.post(apiEndpoint, data, { headers });
-            } else if (!apiKey || !sourceName) {
-              console.log('Devzery: No API Key or Source given!');
-            } else {
-              console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
-            }
-          } catch (error) {
-            console.error(`Error occurred while sending data to API endpoint: ${error}`);
-          }
-        })();
+       
       });
     });
-   }
   };
 }
