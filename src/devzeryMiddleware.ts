@@ -84,16 +84,16 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         }
 
         let responseContentString: string;
-        console.log(typeof responseContent)
-        if (typeof responseContent === 'string') {
+        console.log("Response obj ",res)
+        if (typeof res === 'string') {
           responseContentString = responseContent;
-        } else if (Buffer.isBuffer(responseContent)) {
+        } else if (Buffer.isBuffer(res)) {
           responseContentString = responseContent.toString('utf-8');
-        } else if (typeof responseContent === 'object') {
-          responseContentString = JSON.stringify(responseContent);
+        } else if (typeof res === 'object') {
+          responseContentString = JSON.stringify(res);
         } else {
           console.log("Response Content ", responseContent)
-          responseContentString = responseContent?.toString();
+          responseContentString = JSON.stringify(res);
         }
 
         const data = {
