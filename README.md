@@ -36,7 +36,7 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 3. Apply the middleware to your Express application:
 
    ```typescript
-   app.use(devzeryMiddleware(devzeryConfig));
+   app.use(devzeryMiddleware.default(devzeryConfig));
    ```
 
    Make sure to apply the middleware before defining your routes.
