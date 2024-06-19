@@ -2,17 +2,20 @@
   "name": "devzery_middleware_express",
   "version": "0.0.1",
   "description": "Devzery middlware to capture the API requests",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+ 
   "scripts": {
-    "build": "tsc",
-    "prepublish": "npm run build"
+    "build:commonjs": "tsc --module commonjs --outDir ./dist/cjs",
+    "build:esm": "tsc --module ESNext --outDir ./dist/esm",
+    "build": "npm run build:commonjs && npm run build:esm"
   },
   "author": "Devzery Technologies",
   "license": "ISC",
   "dependencies": {
     "@types/multer": "^1.4.11",
     "axios": "^1.6.8",
+    "body-parser": "^1.20.2",
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {

@@ -5,4 +5,4 @@ interface DevzeryConfig {
     sourceName?: string;
 }
 export default function devzeryMiddleware(config: DevzeryConfig): (req: Request, res: Response, next: NextFunction) => Promise<void>;
-export {};
+export { devzeryMiddleware, DevzeryConfig };

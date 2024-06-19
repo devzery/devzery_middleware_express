@@ -122,3 +122,5 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
     });
   };
 }
+
+export { devzeryMiddleware, DevzeryConfig };
