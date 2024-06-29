@@ -26,7 +26,7 @@ To use the Devzery Middleware SDK in your Express application, follow these step
    const devzeryConfig = {
      apiEndpoint: 'ENDPOINT', //OPTIONAL FOR DEVELOPMENT/TEST ONLY
      apiKey: 'YOUR_API_KEY',
-     sourceName: 'YOUR_SOURCE_NAME',
+     serverName: 'YOUR_SOURCE_NAME',
    };
    ```
 
@@ -57,7 +57,7 @@ To use the Devzery Middleware SDK in your Express application, follow these step
     const devzeryConfig = {
     apiEndpoint: 'ENDPOINT URL', //OPTIONAL FOR DEVELOPMENT/TEST ONLY
     apiKey: 'YOUR_API_KEY',
-    sourceName: 'YOUR_SOURCE_NAME',
+    serverName: 'YOUR_SERVER_NAME',
     };
 
     app.use(devzeryMiddleware(devzeryConfig));
@@ -76,9 +76,9 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 The `devzeryMiddleware` function accepts an optional configuration object with the following properties:
 
 - `apiKey` : Your Devzery API key for authentication.
-- `sourceName` : A name to identify your application as the source of the logged data.
+- `serverName` : A name to identify your application as the source of the logged data.
 
-If the `apiKey` or `sourceName` is not provided, the middleware will log a warning message and skip sending data to the API endpoint.
+If the `apiKey` or `serverName` is not provided, the middleware will log a warning message and skip sending data to the API endpoint.
 
 ## TypeScript Support
 

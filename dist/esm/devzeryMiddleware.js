@@ -12,7 +12,7 @@ import multer from 'multer';
 import bodyParser from 'body-parser';
 const upload = multer();
 export default function devzeryMiddleware(config) {
-    const { apiEndpoint = 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add', apiKey, sourceName } = config;
+    const { apiEndpoint = 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add', apiKey, serverName } = config;
     return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         const startTime = Date.now();
         // Wrap the original send method to capture the response content
@@ -50,15 +50,15 @@ export default function devzeryMiddleware(config) {
             // console.log("Devzery:", data);
             (() => __awaiter(this, void 0, void 0, function* () {
                 try {
-                    if (apiKey && sourceName && responseContentString !== null) {
+                    if (apiKey && serverName && responseContentString !== null) {
                         const headers = {
                             'x-access-token': apiKey,
-                            'source-name': sourceName,
+                            'source-name': serverName,
                         };
                         // console.log("Devzery Sending:", data);
                         yield axios.post(apiEndpoint, data, { headers });
                     }
-                    else if (!apiKey || !sourceName) {
+                    else if (!apiKey || !serverName) {
                         console.log('Devzery: No API Key or Source given!');
                     }
                     else {

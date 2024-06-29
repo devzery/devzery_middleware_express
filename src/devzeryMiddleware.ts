@@ -7,13 +7,13 @@ import bodyParser from 'body-parser';
 interface DevzeryConfig {
   apiEndpoint?: string;
   apiKey?: string;
-  sourceName?: string;
+  serverName?: string;
 }
 
 const upload = multer();
 
 export default function devzeryMiddleware(config: DevzeryConfig) {
-  const { apiEndpoint = 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add', apiKey, sourceName } = config;
+  const { apiEndpoint = 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add', apiKey, serverName } = config;
 
   return async (req: Request, res: Response, next: NextFunction) => {
     const startTime = Date.now();
@@ -62,14 +62,14 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
 
       (async () => {
         try {
-          if (apiKey && sourceName && responseContentString !== null) {
+          if (apiKey && serverName && responseContentString !== null) {
             const headers = {
               'x-access-token': apiKey,
-              'source-name': sourceName,
+              'source-name': serverName,
             };
             // console.log("Devzery Sending:", data);
             await axios.post(apiEndpoint, data, { headers });
-          } else if (!apiKey || !sourceName) {
+          } else if (!apiKey || !serverName) {
             console.log('Devzery: No API Key or Source given!');
           } else {
             console.log(`Devzery: Skipping Hit ${req.originalUrl}`);
