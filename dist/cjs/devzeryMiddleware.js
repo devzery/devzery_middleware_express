@@ -53,7 +53,7 @@ function devzeryMiddleware(config) {
                 },
                 elapsedTime: Date.now() - startTime,
             };
-            // console.log("Devzery:", data);
+            console.log("Devzery:", data);
             (() => __awaiter(this, void 0, void 0, function* () {
                 try {
                     if (apiKey && serverName && responseContentString !== null) {
