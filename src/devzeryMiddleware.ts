@@ -58,7 +58,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         elapsedTime:Date.now() - startTime,
       };
 
-      // console.log("Devzery:", data);
+      console.log("Devzery:", data);
 
       (async () => {
         try {
@@ -67,7 +67,7 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
               'x-access-token': apiKey,
               'source-name': serverName,
             };
-            console.log("Devzery Sending:", data);
+            // console.log("Devzery Sending:", data);
             await axios.post(apiEndpoint, data, { headers });
           } else if (!apiKey || !serverName) {
             console.log('Devzery: No API Key or Source given!');
