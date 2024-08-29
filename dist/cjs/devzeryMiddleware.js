@@ -39,7 +39,7 @@ function devzeryMiddleware(config) {
             const headers = Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('http_') || ['content-length', 'content-type'].includes(key)));
         }
         function processResponseContent() {
-            const responseContentString = responseContent !== undefined ? responseContent.toString() : '';
+            const responseContentString = responseContent !== undefined ? responseContent : {};
             const data = {
                 request: {
                     method: req.method,
@@ -48,10 +48,10 @@ function devzeryMiddleware(config) {
                     body,
                 },
                 response: {
-                    statusCode: res.statusCode,
+                    status_code: res.statusCode,
                     content: responseContentString,
                 },
-                elapsedTime: Date.now() - startTime,
+                elapsed_time: Date.now() - startTime,
             };
             console.log("Devzery:", data);
             (() => __awaiter(this, void 0, void 0, function* () {
