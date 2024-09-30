@@ -23,7 +23,6 @@ function devzeryMiddleware(config) {
         const startTime = Date.now();
         // Wrap the original send method to capture the response content
         const originalSend = res.send;
-        console.log("Original Send ", originalSend);
         let responseContent;
         let headers;
         let body;
@@ -44,8 +43,8 @@ function devzeryMiddleware(config) {
                 request: {
                     method: req.method,
                     path: req.originalUrl,
-                    headers,
-                    body,
+                    headers: req.headers,
+                    body: req.body,
                 },
                 response: {
                     status_code: res.statusCode,
@@ -53,7 +52,6 @@ function devzeryMiddleware(config) {
                 },
                 elapsed_time: Date.now() - startTime,
             };
-            console.log("Devzery:", data);
             (() => __awaiter(this, void 0, void 0, function* () {
                 try {
                     if (apiKey && serverName && responseContentString !== null) {
@@ -61,7 +59,6 @@ function devzeryMiddleware(config) {
                             'x-access-token': apiKey,
                             'source-name': serverName,
                         };
-                        // console.log("Devzery Sending:", data);
                         yield axios_1.default.post(apiEndpoint, data, { headers });
                     }
                     else if (!apiKey || !serverName) {

@@ -20,7 +20,6 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
 
     // Wrap the original send method to capture the response content
     const originalSend = res.send;
-    console.log("Original Send ", originalSend)
     let responseContent: any;
     let headers: any;
     let body: any;
@@ -48,8 +47,8 @@ export default function devzeryMiddleware(config: DevzeryConfig) {
         request: {
           method: req.method,
           path: req.originalUrl,
-          headers,
-          body,
+          headers: req.headers,
+          body: req.body,
         },
         response: {
           status_code: res.statusCode,

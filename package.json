@@ -1,6 +1,6 @@
 {
   "name": "devzery_middleware_express",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Devzery middlware to capture the API requests",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
