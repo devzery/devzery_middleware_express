@@ -24,7 +24,6 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
    ```typescript
    const devzeryConfig = {
-     apiEndpoint: 'ENDPOINT', //OPTIONAL FOR DEVELOPMENT/TEST ONLY
      apiKey: 'YOUR_API_KEY',
      serverName: 'YOUR_SOURCE_NAME',
    };
@@ -55,7 +54,6 @@ To use the Devzery Middleware SDK in your Express application, follow these step
     const app = express();
 
     const devzeryConfig = {
-    apiEndpoint: 'ENDPOINT URL', //OPTIONAL FOR DEVELOPMENT/TEST ONLY
     apiKey: 'YOUR_API_KEY',
     serverName: 'YOUR_SERVER_NAME',
     };
