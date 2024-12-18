@@ -3,10 +3,16 @@
     "module": "ESNext",
     "target": "ES2015",
     "declaration": true,
+    "declarationDir": "dist",
     "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true 
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
