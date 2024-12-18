@@ -1,25 +1,49 @@
 {
   "name": "devzery_middleware_express",
-  "version": "0.0.2",
-  "description": "Devzery middlware to capture the API requests",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
- 
+  "version": "1.0.0",
+  "description": "Framework-agnostic devzery middleware for processing requests and responses",
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "types": "dist/types",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build:commonjs": "tsc --module commonjs --outDir ./dist/cjs",
-    "build:esm": "tsc --module ESNext --outDir ./dist/esm",
-    "build": "npm run build:commonjs && npm run build:esm"
+    "prebuild": "rimraf dist",
+    "build:cjs": "esbuild src/*.ts --outdir=dist/cjs --platform=node --format=cjs",
+    "build:esm": "esbuild src/*.ts --outdir=dist/esm --platform=node --format=esm",
+    "build:types": "tsc",
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types"
   },
   "author": "Devzery Technologies",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devzery/devzery_middleware_express"
+  },
+  "keywords": [
+    "middleware",
+    "express",
+    "fastify",
+    "typescript",
+    "devzery"
+  ],
   "dependencies": {
-    "@types/multer": "^1.4.11",
     "axios": "^1.7.4",
-    "body-parser": "^1.20.3",
-    "multer": "^1.4.5-lts.1"
+    "body-parser": "^1.20.3"
+  },
+  "peerDependencies": {
+    "express": "^4.0.0",
+    "fastify": "^4.28.1"
   },
   "devDependencies": {
+    "@fastify/multipart": "^9.0.1",
     "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^18.0.0",
+    "esbuild": "^0.24.0",
+    "multer": "^1.4.5-lts.1",
+    "rimraf": "^6.0.1",
     "typescript": "^5.4.5"
   }
 }
