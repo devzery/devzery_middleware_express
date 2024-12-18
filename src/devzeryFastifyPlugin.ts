@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { DevzeryConfig, DevzeryRequestContext, DevzeryResponseContext } from './types';
 import { DevzeryLogger } from './DevzeryLogger';
 import multipart from '@fastify/multipart';
