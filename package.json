@@ -2,8 +2,9 @@
   "name": "devzery_middleware_express",
   "version": "1.0.0",
   "description": "Framework-agnostic devzery middleware for processing requests and responses",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "types": "dist/types",
   "files": [
     "dist"
   ],
@@ -11,7 +12,8 @@
     "prebuild": "rimraf dist",
     "build:cjs": "esbuild src/*.ts --outdir=dist/cjs --platform=node --format=cjs",
     "build:esm": "esbuild src/*.ts --outdir=dist/esm --platform=node --format=esm",
-    "build": "npm run build:cjs && npm run build:esm"
+    "build:types": "tsc",
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types"
   },
   "author": "Devzery Technologies",
   "license": "ISC",
