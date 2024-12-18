@@ -4,11 +4,17 @@ The Devzery Middleware SDK is a package that allows you to easily integrate requ
 
 ## Installation
 
-You can install the Devzery Middleware SDK using npm:
+You can install the Devzery Middleware SDK using npm or yarn:
 
 ```bash
 npm install https://github.com/devzery/devzery_middleware_express
 ```
+### OR
+
+```bash
+yarn add https://github.com/devzery/devzery_middleware_express
+```
+
 
 ## Usage
 
@@ -18,6 +24,18 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
    ```typescript
    import devzeryMiddleware from 'devzery_middleware_express';
+   ```
+
+   ```esm
+   import devzeryMiddleware from 'devzery_middleware_express';
+   ```
+
+   ```cjs
+   const devzeryMiddleware = require('devzery_middleware_express').default;
+   ```
+
+   ```fastify
+   import { devzeryFastifyPlugin } from 'devzery_middleware_express';
    ```
 
 2. Configure the middleware with your Devzery API endpoint, API key, and source name:
@@ -36,6 +54,18 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
    ```typescript
    app.use(devzeryMiddleware.default(devzeryConfig));
+   ```
+
+   ```esm
+   app.use(devzeryMiddleware.default(devzeryConfig));
+   ```
+
+   ```cjs
+   app.use(devzeryMiddleware(devzeryConfig));
+   ```
+
+   ```fastify
+   fastify.register(devzeryFastifyPlugin(devzeryConfig));
    ```
 
    Make sure to apply the middleware before defining your routes.
@@ -59,14 +89,6 @@ To use the Devzery Middleware SDK in your Express application, follow these step
     };
 
     app.use(devzeryMiddleware(devzeryConfig));
-
-    app.get('/', (req, res) => {
-    res.send('Hello, world!');
-    });
-
-    app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-    });
    ```
 
 ## Configuration
