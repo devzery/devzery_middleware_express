@@ -4,12 +4,14 @@ import { DevzeryConfig, DevzeryLogData, DevzeryRequestContext, DevzeryResponseCo
 /**
  * Service responsible for sending logging data to the Devzery endpoint
  */
+const DEFAULT_API_ENDPOINT = 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add';
+
 export class DevzeryLogger {
   private config: DevzeryConfig;
 
   constructor(config: DevzeryConfig) {
     this.config = {
-      apiEndpoint: config.apiEndpoint || 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add',
+      apiEndpoint: config.apiEndpoint || DEFAULT_API_ENDPOINT,
       apiKey: config.apiKey,
       serverName: config.serverName
     };

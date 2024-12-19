@@ -1,8 +1,9 @@
 import axios from "axios";
+const DEFAULT_API_ENDPOINT = "https://server-v3-7qxc7hlaka-uc.a.run.app/api/add";
 class DevzeryLogger {
   constructor(config) {
     this.config = {
-      apiEndpoint: config.apiEndpoint || "https://server-v3-7qxc7hlaka-uc.a.run.app/api/add",
+      apiEndpoint: config.apiEndpoint || DEFAULT_API_ENDPOINT,
       apiKey: config.apiKey,
       serverName: config.serverName
     };
