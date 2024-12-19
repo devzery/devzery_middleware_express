@@ -22,20 +22,21 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
 1. Import the `devzeryMiddleware` function from the package:
 
+   # Express Typescript/ESM
    ```typescript
    import devzeryMiddleware from 'devzery_middleware_express';
    ```
-
-   ```esm
-   import devzeryMiddleware from 'devzery_middleware_express';
-   ```
-
-   ```cjs
+   # Express Common Javascript
+   ```javascript
    const devzeryMiddleware = require('devzery_middleware_express').default;
    ```
-
-   ```fastify
+   # Fastify Typescript/ESM
+   ```typescript
    import { devzeryFastifyPlugin } from 'devzery_middleware_express';
+   ```
+   # Fastify Common Javascript
+   ```javascript
+   const { devzeryFastifyPlugin } = require('devzery_middleware_express');
    ```
 
 2. Configure the middleware with your Devzery API endpoint, API key, and source name:
@@ -52,20 +53,21 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
 3. Apply the middleware to your Express application:
 
+   # Express Typescript/ESM
    ```typescript
    app.use(devzeryMiddleware.default(devzeryConfig));
    ```
-
-   ```esm
-   app.use(devzeryMiddleware.default(devzeryConfig));
-   ```
-
-   ```cjs
+   # Express Common Javascript
+   ```javascript
    app.use(devzeryMiddleware(devzeryConfig));
    ```
-
-   ```fastify
+   # Fastify Typescript/ESM
+   ```typescript
    fastify.register(devzeryFastifyPlugin(devzeryConfig));
+   ```
+   # Fastify Common Javascript
+   ```javascript
+   fastify.register(devzeryFastifyPlugin, devzeryConfig);
    ```
 
    Make sure to apply the middleware before defining your routes.
@@ -73,23 +75,6 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 4. Run your Express application
 
    The Devzery Middleware SDK will now capture the request and response data for each incoming request and send it to the specified Devzery API endpoint.
-
-   ### OR
-
-
-   ```javascript
-    const express = require('express');
-    const devzeryMiddleware = require('devzery_middleware_express').default;
-
-    const app = express();
-
-    const devzeryConfig = {
-    apiKey: 'YOUR_API_KEY',
-    serverName: 'YOUR_SERVER_NAME',
-    };
-
-    app.use(devzeryMiddleware(devzeryConfig));
-   ```
 
 ## Configuration
 
