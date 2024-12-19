@@ -53,19 +53,12 @@ To use the Devzery Middleware SDK in your Express application, follow these step
 
 3. Apply the middleware to your Express application:
 
-   #### Express Typescript/ESM
+   #### Express
    ```typescript
-   app.use(devzeryMiddleware.default(devzeryConfig));
-   ```
-   #### Express Common Javascript
-   ```javascript
    app.use(devzeryMiddleware(devzeryConfig));
    ```
-   #### Fastify Typescript/ESM
-   ```typescript
-   fastify.register(devzeryFastifyPlugin(devzeryConfig));
-   ```
-   #### Fastify Common Javascript
+   
+   #### Fastify
    ```javascript
    fastify.register(devzeryFastifyPlugin, devzeryConfig);
    ```
