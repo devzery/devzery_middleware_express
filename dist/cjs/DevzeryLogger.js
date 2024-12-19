@@ -32,10 +32,11 @@ __export(DevzeryLogger_exports, {
 });
 module.exports = __toCommonJS(DevzeryLogger_exports);
 var import_axios = __toESM(require("axios"));
+const DEFAULT_API_ENDPOINT = "https://server-v3-7qxc7hlaka-uc.a.run.app/api/add";
 class DevzeryLogger {
   constructor(config) {
     this.config = {
-      apiEndpoint: config.apiEndpoint || "https://server-v3-7qxc7hlaka-uc.a.run.app/api/add",
+      apiEndpoint: config.apiEndpoint || DEFAULT_API_ENDPOINT,
       apiKey: config.apiKey,
       serverName: config.serverName
     };

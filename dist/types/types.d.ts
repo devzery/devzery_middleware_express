@@ -1,7 +1,7 @@
 export interface DevzeryConfig {
     apiEndpoint?: string;
-    apiKey?: string;
-    serverName?: string;
+    apiKey: string;
+    serverName: string;
 }
 export interface DevzeryLogData {
     request: {
