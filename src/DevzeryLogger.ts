@@ -9,7 +9,7 @@ export class DevzeryLogger {
 
   constructor(config: DevzeryConfig) {
     this.config = {
-      apiEndpoint: 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add',
+      apiEndpoint: config.apiEndpoint || 'https://server-v3-7qxc7hlaka-uc.a.run.app/api/add',
       apiKey: config.apiKey,
       serverName: config.serverName
     };
