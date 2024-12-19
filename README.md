@@ -60,7 +60,7 @@ To use the Devzery Middleware SDK in your Express application, follow these step
    
    #### Fastify
    ```javascript
-   fastify.register(devzeryFastifyPlugin, devzeryConfig);
+   await devzeryFastifyPlugin(fastify, devzeryConfig);
    ```
 
    Make sure to apply the middleware before defining your routes.
