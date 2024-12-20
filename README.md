@@ -1,88 +1,223 @@
-# Devzery Middleware SDK
+# Devzery Middleware SDK  
 
-The Devzery Middleware SDK is a package that allows you to easily integrate request and response logging functionality into your Node.js Express application using the TSOA framework.
+The Devzery Middleware SDK is a package that allows you to easily integrate request and response logging functionality into your **Node.js Express application** using the TSOA framework, which supports applications built with both **TypeScript** and **JavaScript**. 
 
-## Installation
 
-You can install the Devzery Middleware SDK using npm or yarn:
 
-```bash
-npm install https://github.com/devzery/devzery_middleware_express
+## 🎯 Purpose of Integration  
+
+The Devzery Middleware SDK helps you:  
+- **Monitor API traffic**: Capture detailed logs of requests and responses for all API calls in your application.  
+- **Debug efficiently**: Identify issues in real-time by analyzing API behavior through captured logs.  
+- **Improve reliability**: Track and monitor API performance across environments (e.g., staging, production).  
+
+By integrating this SDK, you can streamline debugging and enhance observability for your microservices.
+
+**Prerequisites**
+- Basic understanding of Node.js and Express.js.
+- Familiarity with RESTful API development.
+- Installed and configured Node.js environment.
+
+**System Requirements**
+- Node.js version: >=18.x
+- Express.js version: >=4.18.x
+- Internet connectivity to send logs to Devzery.
+
+
+## 📦 Installation  
+
+Install the SDK via npm: 
+
+```bash  
+npm install https://github.com/devzery/devzery_middleware_express 
 ```
-### OR
 
-```bash
-yarn add https://github.com/devzery/devzery_middleware_express
+
+## 🛠️ Quick Start Guide
+
+**Step 1:** Import the middleware into your application:
+
+#### Express Applications
+>For ES6 -
+```js
+import devzeryMiddleware from 'devzery_middleware_express';
+```
+
+For CommonJS -
+```js
+const devzeryMiddleware = require('devzery_middleware_express');
+```
+
+#### Fastify Applications
+```js
+const { devzeryFastifyPlugin } = require( 'devzery_middleware_express');
+```
+
+**Step 2:** Configure the middleware with your Devzery API endpoint, API key, and server name:
+```js 
+const devzeryConfig = {
+  apiKey: 'YOUR_API_KEY', // Replace with your API key
+  serverName: 'YOUR_MICROSERVICE_NAME', // Replace with your microservice name
+};
+```
+Replace **'YOUR_API_KEY'** with your actual Devzery API key and **'YOUR_MICROSERVICE_NAME'** with a name to identify your microservice’s source server.
+
+
+
+
+**Step 3:** Apply the middleware to your Express application:
+
+```js 
+app.use(devzeryMiddleware(devzeryConfig));
+```
+
+#### Fastify Applications
+```js
+devzeryFastifyPlugin(fastify, devzeryConfig);
+```
+
+Make sure to apply the middleware before defining your routes or other middlewares.
+
+
+
+**Basic Express Integration Example**
+
+```js 
+const express = require('express');
+const devzeryMiddleware = require('devzery_middleware_express').default;
+
+const app = express();
+
+const devzeryConfig = {
+    apiKey: 'YOUR_API_KEY',
+    serverName: 'YOUR_MICROSERVICE_NAME',
+};
+
+app.use(devzeryMiddleware(devzeryConfig));
+
+app.get('/', (req, res) => {
+    res.send('Hello, world!');
+});
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
+```
+
+**Basic Fastify Integration Example**
+
+```js
+const { devzeryFastifyPlugin } = require( 'devzery_middleware_express');
+const fastify = require( 'fastify')()
+const port = process.env.SERVER_PORT || 3000
+const devzeryConfig = {
+ apiKey: 'YOUR_API_KEY', 
+ serverName: 'YOUR_SOURCE_NAME'
+}；
+devzeryFastifyPlugin(fastify, devzeryConfig);
+
+// Define your routes
+fastify.get('/', async (request, reply) => {
+    return { hello: 'world' }
+})
+
+fastify.post('/data', async (request, reply) => {
+    return { status: 'received' }
+})
+
+// Start the server
+fastify.listen({ port: port }, (err) => {
+    if (err) {
+        console.error(err)
+        process.exit(1)
+    }
+    console.log(`Server listening on port ${port}`)
+})
 ```
 
 
-## Usage
+**Step 4:** Run your Express application
 
-To use the Devzery Middleware SDK in your Express application, follow these steps:
+- Save all your changes.  
+- Open your terminal and navigate to your project directory.  
+- Start you application.
 
-1. Import the `devzeryMiddleware` function from the package:
-
-   #### Express Typescript/ESM
-   ```typescript
-   import devzeryMiddleware from 'devzery_middleware_express';
-   ```
-   #### Express Common Javascript
-   ```javascript
-   const devzeryMiddleware = require('devzery_middleware_express');
-   ```
-   #### Fastify Typescript/ESM
-   ```typescript
-   import { devzeryFastifyPlugin } from 'devzery_middleware_express';
-   ```
-   #### Fastify Common Javascript
-   ```javascript
-   const { devzeryFastifyPlugin } = require('devzery_middleware_express');
-   ```
-
-2. Configure the middleware with your Devzery API endpoint, API key, and source name:
-
-   ```typescript
-   const devzeryConfig = {
-     apiKey: 'YOUR_API_KEY',
-     serverName: 'YOUR_SOURCE_NAME',
-   };
-   ```
+The Devzery Middleware SDK will now capture the request and response data for each incoming request and send it to Devzery.
 
 
-   Replace `'YOUR_API_KEY'` with your actual Devzery API key and `'YOUR_SOURCE_NAME'` with a name to identify your application as the source of the logged data.
+**Step 5:** Verify SDK Integration:
 
-3. Apply the middleware to your Express application:
+- Start using your application either by interacting with the User Interface or hitting APIs.
+- Go back to the Devzery dahsboard and check for the integration status whether it is successful or not.
 
-   #### Express
-   ```typescript
-   app.use(devzeryMiddleware(devzeryConfig));
-   ```
-   
-   #### Fastify
-   ```javascript
-   await devzeryFastifyPlugin(fastify, devzeryConfig);
-   ```
 
-   Make sure to apply the middleware before defining your routes.
+## ⚙️ Configuration  
+Parameters and Payloads
+- `apiKey`: Authenticates requests to the Devzery API. 
+- `serverName`: Identifies your application’s server in logs. 
 
-4. Run your Express application
+| **Prameter**   | **Type**   | **Description**    | **Required**   |
+|------------|------------|------------|------------|
+| `apiKey` | `String` | Your unique Devzery API key | Yes |
+| `serverName` | `String` | Microservice name | Yes |
 
-   The Devzery Middleware SDK will now capture the request and response data for each incoming request and send it to the specified Devzery API endpoint.
 
-## Configuration
+## 📝 Features and Functionality: 
 
-The `devzeryMiddleware` function accepts an optional configuration object with the following properties:
+**Overview of Features**
+- Captures request and response data automatically.
+- Sends data to Devzery for centralized logging.
+- Built-in error handling and debugging logs.
 
-- `apiKey` : Your Devzery API key for authentication.
-- `serverName` : A name to identify your application as the source of the logged data.
+**Detailed Functionality**
+- Request Logging: Captures HTTP method, headers, and body.
+- Response Logging: Captures status codes, headers, and response body.
+- Error Reporting: Logs transmission errors to the console.
 
-If the `apiKey` or `serverName` is not provided, the middleware will log a warning message and skip sending data to the API endpoint.
+## 💡Troubleshooting:
 
-## TypeScript Support
+**Verify API Key**:
+- Ensure the API key provided is correct and active.  
 
-The Devzery Middleware SDK is written in TypeScript and provides type definitions for enhanced development experience. Make sure to have TypeScript installed and configured in your project to benefit from type checking and autocompletion.
+**Check Microservice Name**:
+- Confirm that the server name matches the microservice name and URL being logged. 
+ 
+**Environment Mismatch**:
+- Ensure the SDK is integrated into the same environment you want to monitor (e.g., staging or production). e.g., Logs will not appear if APIs are hit on production while Devzery SDK is integrated on staging.
 
-## Logging
+**Middleware not logging data:**
+- Ensure the middleware is applied before defining routes.
 
-The middleware logs the captured request and response data to the console for debugging purposes. It also logs any errors that occur while sending data to the Devzery API endpoint.
+**Error Codes**
+- 401 Unauthorized: Invalid API key.
+- 500 Internal Server Error: Devzery server issue.
 
+**Best Practices**
+- Use environment variables for sensitive data.
+- Apply middleware before any route definitions or other middlewares.
+- Monitor console logs during development for debugging.
+
+**Glossary**
+- API Key: A unique identifier for authenticating API requests.
+- Middleware: A function that processes requests and responses in an Express app.
+- TSOA: TypeScript framework for building APIs, supports both TypeScript and JavaScript application.
+
+## 🙋 Support:
+
+- Email: support@devzery.com
+- Feedback Mechanism: Submit feedback or issues on the [GitHub Repository](https://github.com/devzery/devzery_middleware_express/issues).
+
+## ⚡ Updates and Version History:
+
+**Changelog:**
+- `v1.0.0` Initial release with basic request and response logging.
+
+**License**
+- The SDK is distributed under the `Apache 2.0 License`
+
+## 🔗 Links
+[![portfolio](https://img.shields.io/badge/Devzery-000?style=for-the-badge&logo=ko-fi&logoColor=pink)](https://www.devzery.com)
+
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/devzery/)
+
+[![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://x.com/devzery)
