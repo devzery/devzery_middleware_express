@@ -73,7 +73,7 @@ app.use(devzeryMiddleware(devzeryConfig));
 
 #### Fastify Applications
 ```js
-devzeryFastifyPlugin(fastify, devzeryConfig);
+await devzeryFastifyPlugin(fastify, devzeryConfig);
 ```
 
 Make sure to apply the middleware before defining your routes or other middlewares.
@@ -107,32 +107,39 @@ app.listen(3000, () => {
 **Basic Fastify Integration Example**
 
 ```js
-const { devzeryFastifyPlugin } = require( 'devzery_middleware_express');
-const fastify = require( 'fastify')()
-const port = process.env.SERVER_PORT || 3000
+const { devzeryFastifyPlugin } = require('devzery_middleware_express');
+const fastify = require('fastify')();
+const port = process.env.SERVER_PORT || 3000;
+
 const devzeryConfig = {
- apiKey: 'YOUR_API_KEY', 
- serverName: 'YOUR_SOURCE_NAME'
-}；
-devzeryFastifyPlugin(fastify, devzeryConfig);
+  apiKey: 'YOUR_API_KEY',
+  serverName: 'YOUR_SOURCE_NAME'
+};
 
-// Define your routes
-fastify.get('/', async (request, reply) => {
-    return { hello: 'world' }
-})
+const start = async () => {
+  try {
+    // Register the plugin first
+    await devzeryFastifyPlugin(fastify, devzeryConfig);
 
-fastify.post('/data', async (request, reply) => {
-    return { status: 'received' }
-})
+    // Define your routes
+    fastify.get('/', async (request, reply) => {
+      return { hello: 'world' }
+    });
 
-// Start the server
-fastify.listen({ port: port }, (err) => {
-    if (err) {
-        console.error(err)
-        process.exit(1)
-    }
-    console.log(`Server listening on port ${port}`)
-})
+    fastify.post('/data', async (request, reply) => {
+      return { status: 'received' }
+    });
+
+    // Start the server
+    await fastify.listen({ port });
+    console.log(`Server listening on port ${port}`);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
+
+start();
 ```
 
 
