@@ -1,5 +1,5 @@
 {
-  "name": "devzery_middleware_express",
+  "name": "devzery",
   "version": "1.0.0",
   "description": "Framework-agnostic devzery middleware for processing requests and responses",
   "main": "dist/cjs/index.js",
