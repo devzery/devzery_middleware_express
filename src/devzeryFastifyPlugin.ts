@@ -14,8 +14,15 @@ export default async function devzeryFastifyPlugin(
 ) {
   const devzeryLogger = new DevzeryLogger(config);
 
-  // Register multipart plugin to handle file uploads
-  await fastify.register(multipart);
+  // Register multipart plugin to handle file uploads, only if not already registered
+  try {
+    if (!fastify.hasDecorator('multipartErrors')) {
+      await fastify.register(multipart);
+    }
+  } catch (err: unknown) {
+    // Log the error but don't fail the plugin registration
+    console.warn('Failed to register multipart plugin:', err instanceof Error ? err.message : 'Unknown error');
+  }
 
   // Add a global request hook for logging
   fastify.addHook('onRequest', async (request, reply) => {
