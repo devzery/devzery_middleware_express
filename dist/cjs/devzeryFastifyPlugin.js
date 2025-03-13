@@ -35,7 +35,13 @@ var import_DevzeryLogger = require("./DevzeryLogger");
 var import_multipart = __toESM(require("@fastify/multipart"));
 async function devzeryFastifyPlugin(fastify, config) {
   const devzeryLogger = new import_DevzeryLogger.DevzeryLogger(config);
-  await fastify.register(import_multipart.default);
+  try {
+    if (!fastify.hasDecorator("multipartErrors")) {
+      await fastify.register(import_multipart.default);
+    }
+  } catch (err) {
+    console.warn("Failed to register multipart plugin:", err instanceof Error ? err.message : "Unknown error");
+  }
   fastify.addHook("onRequest", async (request, reply) => {
     request.devzeryStartTime = Date.now();
   });

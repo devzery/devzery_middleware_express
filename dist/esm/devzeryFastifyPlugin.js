@@ -2,7 +2,13 @@ import { DevzeryLogger } from "./DevzeryLogger";
 import multipart from "@fastify/multipart";
 async function devzeryFastifyPlugin(fastify, config) {
   const devzeryLogger = new DevzeryLogger(config);
-  await fastify.register(multipart);
+  try {
+    if (!fastify.hasDecorator("multipartErrors")) {
+      await fastify.register(multipart);
+    }
+  } catch (err) {
+    console.warn("Failed to register multipart plugin:", err instanceof Error ? err.message : "Unknown error");
+  }
   fastify.addHook("onRequest", async (request, reply) => {
     request.devzeryStartTime = Date.now();
   });
