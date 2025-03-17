@@ -73,6 +73,10 @@ app.use(devzeryMiddleware(devzeryConfig));
 
 #### Fastify Applications
 ```js
+await fastify.register(fastifyMultipart);
+await fastify.register(otherPlugins);
+
+// Then register the Devzery plugin last
 await devzeryFastifyPlugin(fastify, devzeryConfig);
 ```
 
@@ -118,7 +122,11 @@ const devzeryConfig = {
 
 const start = async () => {
   try {
-    // Register the plugin first
+    // Register your application plugins first
+    await fastify.register(require('@fastify/multipart'));
+    await fastify.register(require('@fastify/cors'));
+    
+    // Register the Devzery plugin AFTER other plugins
     await devzeryFastifyPlugin(fastify, devzeryConfig);
 
     // Define your routes
