@@ -26,15 +26,15 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var index_exports = {};
-__export(index_exports, {
-  default: () => index_default,
+var src_exports = {};
+__export(src_exports, {
+  default: () => src_default,
   devzeryFastifyPlugin: () => import_devzeryFastifyPlugin.default
 });
-module.exports = __toCommonJS(index_exports);
+module.exports = __toCommonJS(src_exports);
 var import_devzeryMiddleware = __toESM(require("./devzeryMiddleware"));
 var import_devzeryFastifyPlugin = __toESM(require("./devzeryFastifyPlugin"));
-var index_default = import_devzeryMiddleware.default;
+var src_default = import_devzeryMiddleware.default;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   devzeryFastifyPlugin
