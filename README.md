@@ -29,7 +29,7 @@ By integrating this SDK, you can streamline debugging and enhance observability 
 Install the SDK via npm: 
 
 ```bash  
-npm install https://github.com/devzery/devzery_middleware_express 
+npm install devzery 
 ```
 
 
