@@ -40,17 +40,17 @@ npm install devzery
 #### Express Applications
 >For ES6 -
 ```js
-import devzeryMiddleware from 'devzery_middleware_express';
+import devzeryMiddleware from 'devzery';
 ```
 
 For CommonJS -
 ```js
-const devzeryMiddleware = require('devzery_middleware_express');
+const devzeryMiddleware = require('devzery').default;
 ```
 
 #### Fastify Applications
 ```js
-const { devzeryFastifyPlugin } = require( 'devzery_middleware_express');
+const { devzeryFastifyPlugin } = require( 'devzery');
 ```
 
 **Step 2:** Configure the middleware with your Devzery API endpoint, API key, and server name:
@@ -88,7 +88,7 @@ Make sure to apply the middleware before defining your routes or other middlewar
 
 ```js 
 const express = require('express');
-const devzeryMiddleware = require('devzery_middleware_express').default;
+const devzeryMiddleware = require('devzery').default;
 
 const app = express();
 
@@ -111,7 +111,7 @@ app.listen(3000, () => {
 **Basic Fastify Integration Example**
 
 ```js
-const { devzeryFastifyPlugin } = require('devzery_middleware_express');
+const { devzeryFastifyPlugin } = require('devzery');
 const fastify = require('fastify')();
 const port = process.env.SERVER_PORT || 3000;
 
