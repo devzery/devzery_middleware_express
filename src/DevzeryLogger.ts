@@ -52,7 +52,14 @@ export class DevzeryLogger {
   static filterHeaders(headers: Record<string, any>): Record<string, any> {
     return Object.fromEntries(
       Object.entries(headers).filter(([key]) =>
-        key.startsWith('http_') || ['content-length', 'content-type'].includes(key)
+        [
+          'authorization',
+          'content-type',
+          'content-length',
+          'accept',
+          'user-agent',
+          'host'
+        ].includes(key.toLowerCase()) || key.toLowerCase().startsWith('x-')
       )
     );
   }
@@ -63,23 +70,24 @@ export class DevzeryLogger {
    * @returns Parsed request body or null
    */
   static determineRequestBody(context: DevzeryRequestContext): any {
-    const contentType = context.headers['content-type'];
+    // Normalize content-type (case-insensitive) or fallback to empty string
+    const contentType = context.headers?.['content-type']?.toLowerCase() || '';
 
-    // Handle JSON body
-    if (contentType?.includes('application/json')) {
+    // If there's no body, return null
+    if (!context.body) return null;
+
+    const supportedTypes = [
+      'application/json',                     // Handle JSON body
+      'multipart/form-data',                  // Handle multipart form data
+      'application/x-www-form-urlencoded',    // Handle form-encoded content
+      'text/plain'
+    ];
+    
+    if (supportedTypes.some(type => contentType.includes(type)) || context.isMultipart) {
       return context.body;
     }
 
-    // Handle multipart form data
-    if (context.isMultipart || contentType?.includes('multipart/form-data')) {
-      return context.body;
-    }
-
-    // Handle form-encoded content
-    if (contentType?.includes('application/x-www-form-urlencoded')) {
-      return context.body;
-    }
-
+    // If no known content type matched, return null
     return null;
   }
 
