@@ -39,7 +39,14 @@ class DevzeryLogger {
   static filterHeaders(headers) {
     return Object.fromEntries(
       Object.entries(headers).filter(
-        ([key]) => key.startsWith("http_") || ["content-length", "content-type"].includes(key)
+        ([key]) => [
+          "authorization",
+          "content-type",
+          "content-length",
+          "accept",
+          "user-agent",
+          "host"
+        ].includes(key.toLowerCase()) || key.toLowerCase().startsWith("x-")
       )
     );
   }
@@ -49,14 +56,18 @@ class DevzeryLogger {
    * @returns Parsed request body or null
    */
   static determineRequestBody(context) {
-    const contentType = context.headers["content-type"];
-    if (contentType?.includes("application/json")) {
-      return context.body;
-    }
-    if (context.isMultipart || contentType?.includes("multipart/form-data")) {
-      return context.body;
-    }
-    if (contentType?.includes("application/x-www-form-urlencoded")) {
+    const contentType = context.headers?.["content-type"]?.toLowerCase() || "";
+    if (!context.body) return null;
+    const supportedTypes = [
+      "application/json",
+      // Handle JSON body
+      "multipart/form-data",
+      // Handle multipart form data
+      "application/x-www-form-urlencoded",
+      // Handle form-encoded content
+      "text/plain"
+    ];
+    if (supportedTypes.some((type) => contentType.includes(type)) || context.isMultipart) {
       return context.body;
     }
     return null;
