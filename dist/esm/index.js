@@ -1,7 +1,7 @@
 import devzeryMiddleware from "./devzeryMiddleware";
-var index_default = devzeryMiddleware;
+var src_default = devzeryMiddleware;
 import { default as default2 } from "./devzeryFastifyPlugin";
 export {
-  index_default as default,
+  src_default as default,
   default2 as devzeryFastifyPlugin
 };
